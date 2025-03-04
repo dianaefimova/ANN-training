@@ -3,11 +3,25 @@ import pickle
 import pandas as pd
 import uvicorn
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware  # Import CORSMiddleware
 from pydantic import BaseModel
 from tensorflow.keras.models import load_model
 
-
 app = FastAPI()
+
+# Allow CORS for your React frontend running on localhost:3000 for testing
+origins = [
+    "http://localhost:3000",  
+    "http://127.0.0.1:3000",  
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,  
+    allow_credentials=True,
+    allow_methods=["*"],  
+    allow_headers=["*"],  
+)
 
 
 model = load_model('code_model.keras')
@@ -42,7 +56,7 @@ def extract_features_from_code(code):
                         break
     
     return {
-        "Programming_Language": "Python",  # Hardcoded for now, will be chnaged later
+        "Programming_Language": "Python",  # Hardcoded for now, will be changed later
         "Num_Lines": num_lines,
         "Num_Functions": num_functions,
         "Num_Loops": num_loops,
@@ -54,7 +68,6 @@ def extract_features_from_code(code):
 @app.post("/predict")
 async def predict_difficulty(request: CodeRequest):
     try:
-
         features = extract_features_from_code(request.code)
         df = pd.DataFrame([features])  # Convert to DataFrame
 
@@ -72,6 +85,6 @@ async def predict_difficulty(request: CodeRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-# Run the API (only in local development)
+# Run the API (only in local development) for testing locally
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
