@@ -12,7 +12,8 @@ app = FastAPI()
 # Allow CORS for your React frontend running on localhost:3000 for testing
 origins = [
     "http://localhost:3000",  
-    "http://127.0.0.1:3000",  
+    "http://127.0.0.1:3000",
+    "https://scriptaai.web.app",
 ]
 
 app.add_middleware(
