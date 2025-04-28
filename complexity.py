@@ -16,8 +16,8 @@ from keras.utils import to_categorical
 df = pd.read_csv('code_difficulty.csv')
 
 # Divide X and y
-X = df.iloc[:, 0:6] # Features
-y = df.iloc[:, [6]] # Difficulty
+X = df.iloc[:, 0:5] # Features
+y = df.iloc[:, [-1]] # Difficulty
 
 # Dummy variables
 ct = ColumnTransformer(transformers=[('encoder', OneHotEncoder(drop='first'), [0])], remainder='passthrough')
@@ -36,7 +36,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 
 
 # Scale X
-scaler_x = StandardScaler()
+scaler_x = StandardScaler(with_mean=False)
 X_train = scaler_x.fit_transform(X_train)
 X_test = scaler_x.transform(X_test)
 

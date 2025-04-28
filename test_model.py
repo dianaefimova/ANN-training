@@ -56,7 +56,6 @@ def extract_features_from_code(code):
                         break
     
     return {
-        "Programming_Language": "Python",  # Hardcoded for now, will be changed later
         "Num_Lines": num_lines,
         "Num_Functions": num_functions,
         "Num_Loops": num_loops,
